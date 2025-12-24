@@ -4,6 +4,7 @@ import de.ahead.register.dto.User
 import de.ahead.register.model.UserEntry
 import java.util.Random
 import java.util.UUID
+import mu.KotlinLogging
 import org.springframework.stereotype.Service
 
 @Service
@@ -11,9 +12,12 @@ class RAMUserSerice : IUserService {
 
     private val random: Random = Random()
     private val users = mutableMapOf<String, UserEntry>()
+	private val log = KotlinLogging.logger {}
 
     override fun storeUser(user: User): Boolean {
+		log.info { "storeUser: $user" }
         if (users.containsKey(user.email)) {
+			log.info { "storeUser: user had been stored before" }
             return false
         }
 
@@ -25,6 +29,7 @@ class RAMUserSerice : IUserService {
                 lastName = user.lastName
             )
         )
+		log.info { "storeUser: user had been stored; success" }
         return true
     }
 

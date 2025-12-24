@@ -49,7 +49,7 @@ class UsersRegisterrController(
             ResponseEntity.status(HttpStatus.OK).body("OK")
         else
             ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                            .body("the email had been registered")
+                            .body("the email had not been registered")
 
     @Operation(
         summary = "Creates a 6-digit verification code in the RAM",

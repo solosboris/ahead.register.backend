@@ -19,7 +19,6 @@ class SecurityConfig {
         http
             .cors(Customizer.withDefaults())
             .csrf { it.disable() }
-            .httpBasic { it.disable() }
             .authorizeHttpRequests { auth ->
                 auth
                     // CORS preflight
