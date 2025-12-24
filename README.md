@@ -45,7 +45,6 @@ Launcher JVM:  17.0.12 (Oracle Corporation 17.0.12+8-LTS-286)
 Daemon JVM:    C:\files\jdk-17.0.12 (no JDK specified, using current Java home)
 OS:            Windows 10 10.0 amd64
 
-
 gradlew clean build bootRun
 
 http://localhost:8081/ahead/swagger-ui.html
