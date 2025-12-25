@@ -16,31 +16,41 @@ class RAMUserSerice : IUserService {
 
     override fun storeUser(user: UserRegister): Boolean {
 		log.info { "storeUser: $user" }
-        if (users.containsKey(user.email)) {
-			log.info { "storeUser: user had been stored before" }
-            return false
+        val userEntry: UserEntry? = users[user.email]
+        if (userEntry == null) {
+            users.put(
+                user.email,
+                UserEntry(
+                    id = UUID.randomUUID().toString(),
+                    firstName = user.firstName,
+                    lastName = user.lastName
+                ).apply{ code = 0 }
+            )
+            log.info { "storeUser: #1 user had been created and stored; success" }
+            return true
+        } else if (userEntry.code != 1) {
+            userEntry.code = 0
+            log.info { "storeUser: #2 user code has been zeroed anew; success" }
+            return true
+        } else {
+            log.info { "storeUser: #3 user had been committed; failure" }
+            return false   
         }
-
-        users.put(
-            user.email,
-            UserEntry(
-                id = UUID.randomUUID().toString(),
-                firstName = user.firstName,
-                lastName = user.lastName
-            ).apply{ code = 0 }
-        )
-		log.info { "storeUser: user had been stored; success" }
-        return true
     }
 
     override fun storeEmail(email: String): Int {
         val userEntry: UserEntry? = users[email]
         if (userEntry == null) {
+            log.info { "storeEmail: #1 no user; failure" }
             return -1
-        }
-
-        userEntry.code = random.nextInt(999999 - 100000 + 1) + 100000
-        return userEntry.code
+        } else if (userEntry.code != 1) {
+            userEntry.code = random.nextInt(999999 - 100000 + 1) + 100000
+            log.info { "storeEmail: #2 user code has been set/reset; success" }
+            return userEntry.code
+        } else {
+            log.info { "storeEmail: #3 user had been committed; failure" }
+            return -1   
+        }        
     }
 
     override fun login(email: String, code: Int): UserEntry? {
