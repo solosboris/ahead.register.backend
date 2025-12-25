@@ -6,5 +6,6 @@ data class UserEntry(
     val lastName: String
 ) {
     var code: Int = 0
+        get() { return field }
         set(value) { field = value }
 }

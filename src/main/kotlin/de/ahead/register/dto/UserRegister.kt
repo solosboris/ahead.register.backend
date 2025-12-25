@@ -1,8 +1,7 @@
 package de.ahead.register.dto
 
-data class User(
+data class UserRegister(
 
-    val id: String,
     val firstName: String,
     val lastName: String,
     val email: String

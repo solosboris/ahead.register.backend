@@ -27,23 +27,23 @@ class UsersRegisterrController(
 
     @Operation(
         summary = "Accepts first name, last name, email; stores in the user repository",
-        description = "Returns the produced user Id",
+        description = "Returns the produced creation acknowledgement",
         responses = [
             ApiResponse(
                 responseCode = "200",
                 description = "produced user Id",
-                content = [Content(schema = Schema(implementation = User::class))]
+                content = [Content(schema = Schema(implementation = String::class))]
             ),
             ApiResponse(
                 responseCode = "406",
                 description = "the email had been registered",
-                content = [Content(schema = Schema(implementation = User::class))]
+                content = [Content(schema = Schema(implementation = String::class))]
             )
         ]
     )
     @PostMapping("/register")
     fun register(
-        @RequestBody user: User
+        @RequestBody user: UserRegister
     ): ResponseEntity<String> =
         if (userService.storeUser(user))
             ResponseEntity.status(HttpStatus.OK).body("OK")
@@ -58,12 +58,12 @@ class UsersRegisterrController(
             ApiResponse(
                 responseCode = "200",
                 description = "produced code",
-                content = [Content(schema = Schema(implementation = User::class))]
+                content = [Content(schema = Schema(implementation = Int::class))]
             ),
             ApiResponse(
                 responseCode = "406",
                 description = "no such email",
-                content = [Content(schema = Schema(implementation = User::class))]
+                content = [Content(schema = Schema(implementation = Int::class))]
             )
         ]
     )
@@ -89,17 +89,17 @@ class UsersRegisterrController(
             ApiResponse(
                 responseCode = "200",
                 description = "success: 200 status code, user ID, first name and last name",
-                content = [Content(schema = Schema(implementation = User::class))]
+                content = [Content(schema = Schema(implementation = UserResponse::class))]
             ),
             ApiResponse(
                 responseCode = "401",
                 description = "code mismatch",
-                content = [Content(schema = Schema(implementation = User::class))]
+                content = [Content(schema = Schema(implementation = UserResponse::class))]
             )
         ]
     )
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<User> {
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<UserResponse> {
         val userEntry: UserEntry? = userService.login(
             request.email,
             request.code
@@ -107,22 +107,16 @@ class UsersRegisterrController(
         return if (userEntry != null)
                     ResponseEntity.status(HttpStatus.OK)
                                     .body(
-                                        User(
+                                        UserResponse(
                                             id = userEntry.id,
                                             firstName = userEntry.firstName,
-                                            lastName = userEntry.lastName,
-                                            email = request.email
+                                            lastName = userEntry.lastName
                                         )
                                     )
                 else
                     ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                     .body(
-                                        User(
-                                            id = "",
-                                            firstName = "",
-                                            lastName = "",
-                                            email = request.email
-                                        )
+                                        UserResponse(id = "", firstName = "", lastName = "")
                                     )
     }
 

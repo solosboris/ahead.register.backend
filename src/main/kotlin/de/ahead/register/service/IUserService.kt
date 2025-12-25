@@ -1,11 +1,11 @@
 package de.ahead.register.service
 
-import de.ahead.register.dto.User
+import de.ahead.register.dto.UserRegister
 import de.ahead.register.model.UserEntry
 
 interface IUserService {
 
-    fun storeUser(user: User): Boolean
+    fun storeUser(user: UserRegister): Boolean
 
     fun storeEmail(email: String): Int
 

@@ -1,6 +1,6 @@
 package de.ahead.register.service
 
-import de.ahead.register.dto.User
+import de.ahead.register.dto.UserRegister
 import de.ahead.register.model.UserEntry
 import java.util.Random
 import java.util.UUID
@@ -14,7 +14,7 @@ class RAMUserSerice : IUserService {
     private val users = mutableMapOf<String, UserEntry>()
 	private val log = KotlinLogging.logger {}
 
-    override fun storeUser(user: User): Boolean {
+    override fun storeUser(user: UserRegister): Boolean {
 		log.info { "storeUser: $user" }
         if (users.containsKey(user.email)) {
 			log.info { "storeUser: user had been stored before" }
@@ -27,7 +27,7 @@ class RAMUserSerice : IUserService {
                 id = UUID.randomUUID().toString(),
                 firstName = user.firstName,
                 lastName = user.lastName
-            )
+            ).apply{ code = 0 }
         )
 		log.info { "storeUser: user had been stored; success" }
         return true
@@ -45,10 +45,11 @@ class RAMUserSerice : IUserService {
 
     override fun login(email: String, code: Int): UserEntry? {
         val userEntry: UserEntry? = users[email]
-        return if ((userEntry != null) && (userEntry.code == code))
-                    userEntry
-                else
-                    null
+        if ((userEntry != null) && (userEntry.code == code)) {
+            userEntry.code = 1
+            return userEntry
+        }
+        return null
     }
 
 }
