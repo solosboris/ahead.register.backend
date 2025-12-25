@@ -55,7 +55,11 @@ class RAMUserSerice : IUserService {
 
     override fun login(email: String, code: Int): UserEntry? {
         val userEntry: UserEntry? = users[email]
-        if ((userEntry != null) && (userEntry.code == code)) {
+        if ((userEntry != null)
+                && (userEntry.code == code)
+                && (code >= 100000)
+                && (code <= 999999)
+            ) {
             userEntry.code = 1
             return userEntry
         }
